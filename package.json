@@ -1,0 +1,14 @@
+{
+  "name": "echo-bot",
+  "version": "1.0.0",
+  "description": "A bot that echoes you",
+  "main": "bot.js",
+  "author": "Steven Gao",
+  "dependencies": {
+    "discord.io": "https://github.com/woor/discord.io/tarball/gateway_v6",
+    "discord.js": "^11.4.2",
+    "nodemon": "^1.18.9",
+    "winston": "^3.1.0",
+    "ytdl-core": "^0.29.1"
+  }
+}
