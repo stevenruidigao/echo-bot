@@ -1,4 +1,4 @@
-# echo-bot
+# Echo Bot
 A customizable node.js Dicord Bot
 
 # Getting Started
