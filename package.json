@@ -2,7 +2,7 @@
   "name": "echo-bot",
   "version": "1.0.0",
   "description": "A bot that echoes you",
-  "main": "bot.js",
+  "main": "app.js",
   "author": "Steven Gao",
   "dependencies": {
     "discord.js": "^11.4.2",
