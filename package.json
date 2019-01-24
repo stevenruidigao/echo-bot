@@ -6,7 +6,9 @@
   "author": "Steven Gao",
   "dependencies": {
     "discord.js": "^11.4.2",
+    "node-opus": "^0.3.1",
     "nodemon": "^1.18.9",
+    "simple-youtube-api": "^5.1.1",
     "winston": "^3.1.0",
     "ytdl-core": "^0.29.1"
   }
