@@ -6,7 +6,8 @@ Clone this repo (https://github.com/stevenruidigao/echo-bot.git) and type "node 
 
 ### Usage:
 1. Clone this repository.
-2. Run 'node app.js'.
+2. Edit the 'config.json' file and add the specified keys.
+3. Run 'node app.js'.
 
 # Join Us!
 Join our discord server at https://discord.gg/SFtrvqK!
