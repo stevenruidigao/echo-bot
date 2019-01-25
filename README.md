@@ -7,3 +7,6 @@ Clone this repo (https://github.com/stevenruidigao/echo-bot.git) and type "node 
 ### Usage:
 1. Clone this repository.
 2. Run 'node app.js'.
+
+# Join Us!
+Join our discord server at https://discord.gg/SFtrvqK!
