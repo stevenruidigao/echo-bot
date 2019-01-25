@@ -14,7 +14,7 @@ const musicQueue = new Map();
 client.on("ready", () => {
 	console.log("Running!");
 	client.user.setActivity(`Serving ${client.guilds.size} servers`);
-    client.user.setActivity("Youtube", { type: "WATCHING"})
+    client.user.setActivity("Youtube", {type: "WATCHING"})
 });
 
 client.on('warn', console.warn);
