@@ -6,7 +6,8 @@
   "scripts": {
     "test": "node tests/test.js"
   },
-  "author": "Steven Gao",
+  "author": "Steven Gao and Echo Bot Team",
+  "license": "SEE LICENSE IN LICENSE",
   "dependencies": {
     "discord.js": "^11.4.2",
     "ffmpeg-binaries": "^4.0.0",
