@@ -1,4 +1,4 @@
-const fs = require('fs');
+﻿const fs = require('fs');
 const ytdl = require('ytdl-core');
 const YouTube = require('simple-youtube-api');
 const Discord = require('discord.js');
@@ -6,7 +6,7 @@ const readline = require('readline').createInterface({
   input: process.stdin,
   output: process.stdout
 })
-const config = require("./config.private.json");
+const config = require("./config.json");
 const client = new Discord.Client();
 const youtube = new YouTube(config.googleapikey);
 const musicQueue = new Map();
