@@ -6,7 +6,7 @@ const readline = require('readline').createInterface({
   input: process.stdin,
   output: process.stdout
 })
-const config = require("./config.json");
+const config = require("./config.private.json");
 const client = new Discord.Client();
 const youtube = new YouTube(config.googleapikey);
 const musicQueue = new Map();
