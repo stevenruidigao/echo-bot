@@ -57,7 +57,7 @@ client.on("message", async message => {
 	const cmd = args[0].toLowerCase();
 	var serverQueue = musicQueue.get(message.guild.id);
 	args.shift();
-	console.log(args);
+	// console.log(args);
 	var msg = message.content.toLowerCase();
 	if (cmd.indexOf("hi") > -1 || cmd.indexOf("hello") > -1 || cmd.indexOf("hey") > -1) {
 		responses = ["Hi", "Hello", "Hey"];
@@ -77,8 +77,7 @@ client.on("message", async message => {
 			break;
 		case "say":
 			message.delete().catch(O_o=>{}); 
-			const sayMessage = args.join(" ");
-			channel.send(sayMessage);
+			channel.send(args.join(" "));
 			break;
 		case "idk":
 			console.log("IIIDDDKKK: " + cmd + " : " + cmd === "idk");
@@ -116,7 +115,7 @@ client.on("message", async message => {
 			else {
 				var permissions = message.member.voiceChannel.permissionsFor(message.client.user);
 				if (!permissions.has("CONNECT") || !permissions.has("SPEAK")) message.reply("I don't have permission to join this voice channel!");
-				else play(message.guild, message.channel, message.member.voiceChannel, args[0]);
+				else play(message.guild, message.channel, message.member.voiceChannel, args.join(" "));
 			}
 			break;	
 		case "cache":
@@ -127,11 +126,15 @@ client.on("message", async message => {
 			console.log("Done!");
 			break;
 		case "skip":
-			serverQueue.playing = null;
-			serverQueue.connection.dispatcher.end();
+			if (!server.playing) channel.send("There is nothing playing!");
+			else {
+				serverQueue.playing = null;
+				serverQueue.connection.dispatcher.end();
+			}
 			break;
 		case "stop":
-			if (serverQueue.playing != null) {
+			if (!server.playing) channel.send("There is nothig playing.");
+			else {
 				serverQueue.songs.length = 0;
 				serverQueue.playing = null;
 				serverQueue.connection.dispatcher.end();
@@ -157,13 +160,14 @@ function choice(choices) {
   return choices[index];
 }
 
-function play(guild, channel, voiceChannel, input) {
+async function play(guild, channel, voiceChannel, input) {
+	console.log(input);
 	serverQueue = musicQueue.get(guild.id);
 	var url = input;
 	isYTUrl = url.indexOf("=") > -1;
 	if (!isYTUrl) {
-		return;
-		// url = await getYTUrl(input).catch(console.log) + "";
+		// return;
+		url = await getYTUrl(input).catch(console.log) + "";
 	}
 	serverQueue.songs.push(url);
 	if (serverQueue.playing != null) {
@@ -171,7 +175,6 @@ function play(guild, channel, voiceChannel, input) {
 	}
 	if (!serverQueue.songs[0]) {
 		voiceChannel.leave();
-		queue.delete(guild.id);
 		return;
 	}
 	songid = url.split("=")[1];
@@ -179,14 +182,14 @@ function play(guild, channel, voiceChannel, input) {
 	console.log(!fs.existsSync(filename));
 	if (!fs.existsSync(filename)) {
 		console.log("Not using cache :(");
-		ytdl(url).pipe(fs.createWriteStream(filename));
+		await ytdl(url).pipe(fs.createWriteStream(filename));
 	}
 	serverQueue.playing = url;
 	if (guild && voiceChannel) {
-		voiceChannel.join().then(async connection => { // Connection is an instance of VoiceConnection
+		await voiceChannel.join().then(connection => { // Connection is an instance of VoiceConnection
 			serverQueue.connection = connection;
 			channel.send("I have successfully connected to the channel!");
-			const dispatcher = connection.playFile(filename);
+			const dispatcher = connection.playStream(filename);
 			channel.send("Now Playing: " + url);
 			serverQueue.playing = url;
 			serverQueue.dispatcher = dispatcher;
@@ -194,7 +197,7 @@ function play(guild, channel, voiceChannel, input) {
 				console.log(reason);
 				console.log("*" + serverQueue.songs);
 				serverQueue.songs.shift();
-				console.log(serverQueue);
+				// console.log(serverQueue);
 				if (serverQueue.songs.length > 1) {
 					play(guild, channel, voiceChannel, serverQueue.songs[0]);
 				}
