@@ -21,7 +21,10 @@ client.on('warn', console.warn);
 
 client.on('error', console.error);
 
-client.on('disconnect', () => console.log('I just disconnected, making sure you know, I will reconnect now...'));
+client.on('disconnect', () => {
+	console.log('I just disconnected, making sure you know, I will reconnect now...');
+	restart();
+});
 
 client.on('reconnecting', () => console.log('I am reconnecting now!'));
 
