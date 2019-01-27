@@ -1,6 +1,6 @@
 # Echo Bot ![Build Status](https://travis-ci.org/stevenruidigao/echo-bot.svg?branch=master) ![RamenBless](https://cdn.rawgit.com/LunaGao/BlessYourCodeTag/master/tags/ramen.svg)
 
-A customizable Dicord bot.
+A customizable Discord bot.
 
 ### Usage:
 1. Clone this repository.
