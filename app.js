@@ -30,7 +30,10 @@ client.on('warn', console.warn);
 
 client.on('error', console.error);
 
-client.on('disconnect', () => console.log('I just disconnected, making sure you know, I will reconnect now...'));
+client.on('disconnect', () => {
+	console.log('I just disconnected, making sure you know, I will reconnect now...');
+	restart();
+});
 
 client.on('reconnecting', () => console.log('I am reconnecting now!'));
 
@@ -119,26 +122,30 @@ client.on("message", async message => {
 			if (!message.member.voiceChannel) message.reply("You need to join a voice channel first!");
 			else {
 				var permissions = message.member.voiceChannel.permissionsFor(message.client.user);
-				if (!permissions.has("CONNECT") || !permissions.has("SPEAK")) message.reply("I don't have permission to join this voice channel!");
+				if (!permissions.has("CONNECT") || !permissions.has("SPEAK")) message.reply("I don't have permission to join this voice channel!"); 
+				//check for permission to join
 				else play(message.guild, message.channel, message.member.voiceChannel, args.join(" "));
 			}
 			break;	
 		case "cache":
 			// message.channel.send("Deprecated :(");
+			// deprecated
 			id = args[0].split("=")[1];
 			filename = "cached_music/" + id + ".mp3";
 			ytdl(args[0]).pipe(fs.createWriteStream(filename));
 			console.log("Done!");
 			break;
 		case "skip":
-			if (!server.playing) channel.send("There is nothing playing!");
+			// skip the current song
+			if (!serverQueue.playing) channel.send("There is nothing playing!");
 			else {
 				serverQueue.playing = null;
 				serverQueue.connection.dispatcher.end();
 			}
 			break;
 		case "stop":
-			if (!server.playing) channel.send("There is nothig playing.");
+			// stop the current song
+			if (!serverQueue.playing) channel.send("There is nothing playing.");
 			else {
 				serverQueue.songs.length = 0;
 				serverQueue.playing = null;
@@ -146,15 +153,19 @@ client.on("message", async message => {
 			}
 			break;
 		case "pause":
+			// pause the song
 			serverQueue.connection.dispatcher.pause();
 			break;
 		case "resume":
+			// resume the song
 			serverQueue.connection.dispatcher.resume();
 			break;
 		case "nowplaying":
+			// the song we're currently playing
 			message.channel.send("Now Playing: " + serverQueue.songs[0]);
 			break;
 		case "queued":
+			// queued songs
 			message.channel.send("Queue: " + serverQueue.songs);
 			break;
 	}
@@ -162,12 +173,14 @@ client.on("message", async message => {
 
 //Gets a random value out of a specified array.
 function choice(choices) {
-  var index = Math.floor(Math.random() * choices.length);
-  return choices[index];
+	// make a random choice
+	var index = Math.floor(Math.random() * choices.length);
+	return choices[index];
 }
 
 async function play(guild, channel, voiceChannel, input) {
 	console.log(input);
+	// get the queue
 	serverQueue = musicQueue.get(guild.id);
 	var url = input;
 	isYTUrl = url.indexOf("=") > -1;
@@ -175,10 +188,12 @@ async function play(guild, channel, voiceChannel, input) {
 		// return;
 		url = await getYTUrl(input).catch(console.log) + "";
 	}
+	// add to the queue
 	serverQueue.songs.push(url);
 	if (serverQueue.playing != null) {
 		return;
 	}
+	// if there are no songs, leave
 	if (!serverQueue.songs[0]) {
 		voiceChannel.leave();
 		return;
@@ -192,10 +207,12 @@ async function play(guild, channel, voiceChannel, input) {
 	}
 	serverQueue.playing = url;
 	if (guild && voiceChannel) {
+		// connect to the voice channel
 		await voiceChannel.join().then(connection => { // Connection is an instance of VoiceConnection
 			serverQueue.connection = connection;
 			channel.send("I have successfully connected to the channel!");
-			const dispatcher = connection.playStream(filename);
+			// play the file
+			const dispatcher = connection.playFile(filename);
 			channel.send("Now Playing: " + url);
 			serverQueue.playing = url;
 			serverQueue.dispatcher = dispatcher;
@@ -205,6 +222,7 @@ async function play(guild, channel, voiceChannel, input) {
 				serverQueue.songs.shift();
 				// console.log(serverQueue);
 				if (serverQueue.songs.length > 1) {
+					// play the next song
 					play(guild, channel, voiceChannel, serverQueue.songs[0]);
 				}
 				voiceChannel.leave();
@@ -216,6 +234,7 @@ async function play(guild, channel, voiceChannel, input) {
 
 async function getYTUrl(search) {
 	var url;
+	// search for a song
 	await youtube.searchVideos(search, 1).then((results) => {
 		url = "https://www.youtube.com/watch?v=" + results[0].id;
 	});
