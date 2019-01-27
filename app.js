@@ -127,7 +127,7 @@ client.on("message", async message => {
 			break;
 		case "skip":
 			// skip the current song
-			if (!server.playing) channel.send("There is nothing playing!");
+			if (!serverQueue.playing) channel.send("There is nothing playing!");
 			else {
 				serverQueue.playing = null;
 				serverQueue.connection.dispatcher.end();
@@ -135,7 +135,7 @@ client.on("message", async message => {
 			break;
 		case "stop":
 			// stop the current song
-			if (!server.playing) channel.send("There is nothing playing.");
+			if (!serverQueue.playing) channel.send("There is nothing playing.");
 			else {
 				serverQueue.songs.length = 0;
 				serverQueue.playing = null;
