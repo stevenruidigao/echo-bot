@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "description": "A bot that echoes you",
   "main": "app.js",
+  "repository": "https://github.com/stevenruidigao/echo-bot",
   "scripts": {
     "test": "node tests/test.js"
   },
