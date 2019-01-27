@@ -1,4 +1,6 @@
-﻿const fs = require('fs');
+﻿//EDITED by jacob. TEST.
+
+const fs = require('fs');
 const ytdl = require('ytdl-core');
 const YouTube = require('simple-youtube-api');
 const Discord = require('discord.js');
