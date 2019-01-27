@@ -1,18 +1,25 @@
-﻿//EDITED by jacob. TEST.
-
+﻿//File system.
 const fs = require('fs');
+//Command line YouTube video downloader.
 const ytdl = require('ytdl-core');
+//YouTube APIs.
 const YouTube = require('simple-youtube-api');
+const youtube = new YouTube(config.googleapikey);
+//Discord.js library.
 const Discord = require('discord.js');
+//Interface for reading data from a Readable stream.
 const readline = require('readline').createInterface({
   input: process.stdin,
   output: process.stdout
-})
+});
+//Config.json file.
 const config = require("./config.json");
+//Discord bot.
 const client = new Discord.Client();
-const youtube = new YouTube(config.googleapikey);
+//Music queue object.
 const musicQueue = new Map();
 
+//Runs when the bot is ready.
 client.on("ready", () => {
 	console.log("Running!");
 	client.user.setActivity(`Serving ${client.guilds.size} servers`);
@@ -49,7 +56,6 @@ client.on("message", async message => {
 			streamOptions: {seek: 0, volume: 1, passes: 4},
 			playing: null
 		}
-		// songs[0] is current song
 		musicQueue.set(message.guild.id, serverQueue);
 	}
 	var channel = message.channel;
@@ -57,20 +63,19 @@ client.on("message", async message => {
 	const cmd = args[0].toLowerCase();
 	var serverQueue = musicQueue.get(message.guild.id);
 	args.shift();
-	// console.log(args);
 	var msg = message.content.toLowerCase();
 	if (cmd.indexOf("hi") > -1 || cmd.indexOf("hello") > -1 || cmd.indexOf("hey") > -1) {
 		responses = ["Hi", "Hello", "Hey"];
 		suffixes = ["!", " there.", " there!"];
 		channel.send(choice(responses) + choice(suffixes));
 	}
-	// console.log(cmd);
 	switch (cmd.split(config.prefix)[1]) {
 		case "restart":
 			restart(client);
 		case "help":
-			channel.send("Ask @stevenruidigao");
+			channel.send("Ask @stevenruidigao or @humb2700!");
 			break;
+		//Tell the user the latency.
 		case "ping":
 			const m = await channel.send("Ping?");
 			m.edit(`Pong! Latency is ${m.createdTimestamp - message.createdTimestamp}ms. API Latency is ${Math.round(client.ping)}ms`).catch(O_o=>{});
@@ -155,6 +160,7 @@ client.on("message", async message => {
 	}
 });
 
+//Gets a random value out of a specified array.
 function choice(choices) {
   var index = Math.floor(Math.random() * choices.length);
   return choices[index];
@@ -215,13 +221,19 @@ async function getYTUrl(search) {
 	});
 	return url;
 }
+
+
 function restart(client) {
 	console.log("Restarting...");
 	client.destroy().then(() => {
 		client.login(config.token);
 	});
 }
+
+//Login the bot with the token.
 client.login(config.token);
+
+//Possible important code for later usage.
 
 	// console.log("sid: " + songid);
 	// if (songid == null) {
