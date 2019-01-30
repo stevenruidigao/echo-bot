@@ -25,4 +25,4 @@ Authored and maintained by the Echo Bot Team.
 > GitHub [@Steven](https://github.com/stevenruidigao)
 
 ### Join:
-1. Join our discord server at https://discord.gg/SFtrvqK!
+1. Join our discord server at https://discord.gg/b6BnNGM!
