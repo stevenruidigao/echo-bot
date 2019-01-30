@@ -1,4 +1,6 @@
-﻿//File system.
+﻿//This file contains the main JavaScript code that controls the Echo Bot.
+
+//File system.
 const fs = require('fs');
 //Command line YouTube video downloader.
 const ytdl = require('ytdl-core');
@@ -19,6 +21,9 @@ const client = new Discord.Client();
 //Music queue object.
 const musicQueue = new Map();
 
+//Array of the possible commands.
+const commands = ["!help", "!ping", "!idk", "!play"];
+
 //Runs when the bot is ready.
 client.on("ready", () => {
 	console.log("Running!");
@@ -26,27 +31,34 @@ client.on("ready", () => {
 	client.user.setActivity("Youtube", {type: "WATCHING"})
 });
 
+//Outputs warning message to the console.
 client.on('warn', console.warn);
 
+//Runs when there is an error.
 client.on('error', console.error);
 
+//Runs when the bot disconnects.
 client.on('disconnect', () => {
 	console.log('I just disconnected, making sure you know, I will reconnect now...');
 	restart();
 });
 
+//Runs when bot reconnects to the server.
 client.on('reconnecting', () => console.log('I am reconnecting now!'));
 
+//Creates a guild.
 client.on("guildCreate", guild => {
 	console.log(`New guild joined: ${guild.name} (id: ${guild.id}). This guild has ${guild.memberCount} members!`);
-	client.user.setActivity(`Serving ${client.guilds.size} servers`);
+	client.user.setActivity(`Serving ${client.guilds.size} servers.`);
 });
 
+//Deletes a guild.
 client.on("guildDelete", guild => {
 	console.log(`I have been removed from: ${guild.name} (id: ${guild.id})`);
-	client.user.setActivity(`Serving ${client.guilds.size} servers`);
+	client.user.setActivity(`Serving ${client.guilds.size} servers.`);
 });
 
+//Runs when the bot receives a message.
 client.on("message", async message => {
 	if(message.author.bot) return;
 	console.log(message.content);
@@ -75,8 +87,13 @@ client.on("message", async message => {
 	}
 	//This switch statement responds to various commands.
 	switch (cmd.split(config.prefix)[1]) {
+		case "commands":
+			channel.send("Echo Bot can do many things. Here are the commands Echo Bot will respond to: " + commands + ".");
+			break;
+		//Restart the client.
 		case "restart":
 			restart(client);
+		//Tell the user where to ask for help.
 		case "help":
 			channel.send("Ask for help in #help!");
 			break;
@@ -85,12 +102,13 @@ client.on("message", async message => {
 			const m = await channel.send("Ping?");
 			m.edit(`Pong! Latency is ${m.createdTimestamp - message.createdTimestamp}ms. API Latency is ${Math.round(client.ping)}ms`).catch(O_o=>{});
 			break;
+		//Does not seem to do anything.
 		case "say":
 			message.delete().catch(O_o=>{}); 
 			channel.send(args.join(" "));
 			break;
+		//Displays "I do not know." in many different languages.
 		case "idk":
-			console.log("IIIDDDKKK: " + cmd + " : " + cmd === "idk");
 			channel.send(
 				"Eu não sei \n" +
 				"I don't know \n" +
@@ -102,72 +120,76 @@ client.on("message", async message => {
 				"Nescio"
 			) 
 			break;
+		//Repeats what you tell Echo Bot to say. Only the administrator can use this command.
 		case "type":
 			message.delete().catch(O_o=>{});
 			if (message.author.discriminator != "6632") {
-				channel.send("You don't have the permission to use this command");
+				channel.send("You do not have permission to use this command. Only the administrator can run this command.");
 				return;
 			}
-			var answer = ""
+			var answer = "";
 			readline.question("Type what Echo Bot should say: ", (answer) => {
 				channel.send(answer);
 			});
 			break;
+		//Spams the channel with '...'.
 		case "spam":
 			message.delete().catch(O_o=>{});
 			if (args.length > 0) {
 				for (var i = 0; i < args[0]; i ++) channel.send("...");
 			}
 			break;
+		//Plays music.
 		case "play":
 			message.delete().catch(O_o => {});
-			if (!message.member.voiceChannel) message.reply("You need to join a voice channel first!");
-			else {
+			if (!message.member.voiceChannel) {
+				message.reply("You need to join a voice channel first!");
+			} else {
 				var permissions = message.member.voiceChannel.permissionsFor(message.client.user);
 				if (!permissions.has("CONNECT") || !permissions.has("SPEAK")) message.reply("I don't have permission to join this voice channel!"); 
-				//check for permission to join
+				//Check for permission to join.
 				else play(message.guild, message.channel, message.member.voiceChannel, args.join(" "));
 			}
-			break;	
+			break;
 		case "cache":
-			// message.channel.send("Deprecated :(");
-			// deprecated
 			id = args[0].split("=")[1];
 			filename = "cached_music/" + id + ".mp3";
 			ytdl(args[0]).pipe(fs.createWriteStream(filename));
 			console.log("Done!");
 			break;
 		case "skip":
-			// skip the current song
-			if (!serverQueue.playing) channel.send("There is nothing playing!");
-			else {
+			//Skip the current song.
+			if (!serverQueue.playing) {
+				channel.send("There is nothing playing!"); 
+			} else {
 				serverQueue.playing = null;
 				serverQueue.connection.dispatcher.end();
 			}
 			break;
 		case "stop":
-			// stop the current song
-			if (!serverQueue.playing) channel.send("There is nothing playing.");
-			else {
+			//Stop the current song.
+			if (!serverQueue.playing) {
+				channel.send("There is nothing playing.");
+			} else {
 				serverQueue.songs.length = 0;
 				serverQueue.playing = null;
 				serverQueue.connection.dispatcher.end();
 			}
 			break;
 		case "pause":
-			// pause the song
+			//Pause the song.
 			serverQueue.connection.dispatcher.pause();
 			break;
 		case "resume":
-			// resume the song
+			//Resume the song.
 			serverQueue.connection.dispatcher.resume();
 			break;
 		case "nowplaying":
-			// the song we're currently playing
+			//The song that is currently playing.
 			message.channel.send("Now Playing: " + serverQueue.songs[0]);
 			break;
 		case "queued":
-			// queued songs
+			//Queued songs.
 			message.channel.send("Queue: " + serverQueue.songs);
 			break;
 	}
@@ -179,14 +201,14 @@ function choice(choices) {
 	return choices[index];
 }
 
+//Plays music.
 async function play(guild, channel, voiceChannel, input) {
 	console.log(input);
-	// get the queue
+	//Get the queue.
 	serverQueue = musicQueue.get(guild.id);
 	var url = input;
 	isYTUrl = url.indexOf("=") > -1;
 	if (!isYTUrl) {
-		// return;
 		url = await getYTUrl(input).catch(console.log) + "";
 	}
 	//Add song to the queue.
@@ -194,7 +216,7 @@ async function play(guild, channel, voiceChannel, input) {
 	if (serverQueue.playing != null) {
 		return;
 	}
-	// if there are no songs, leave
+	// if there are no songs, leave.
 	if (!serverQueue.songs[0]) {
 		voiceChannel.leave();
 		return;
@@ -208,11 +230,11 @@ async function play(guild, channel, voiceChannel, input) {
 	}
 	serverQueue.playing = url;
 	if (guild && voiceChannel) {
-		// connect to the voice channel
-		await voiceChannel.join().then(connection => { // Connection is an instance of VoiceConnection
+		//Connect to the voice channel.
+		await voiceChannel.join().then(connection => { //Connection is an instance of VoiceConnection.
 			serverQueue.connection = connection;
 			channel.send("I have successfully connected to the channel!");
-			// play the file
+			//Play the file.
 			const dispatcher = connection.playFile(filename);
 			channel.send("Now Playing: " + url);
 			serverQueue.playing = url;
@@ -221,9 +243,8 @@ async function play(guild, channel, voiceChannel, input) {
 				console.log(reason);
 				console.log("*" + serverQueue.songs);
 				serverQueue.songs.shift();
-				// console.log(serverQueue);
 				if (serverQueue.songs.length > 1) {
-					// play the next song
+					//Play the next song.
 					play(guild, channel, voiceChannel, serverQueue.songs[0]);
 				}
 				voiceChannel.leave();
@@ -233,16 +254,17 @@ async function play(guild, channel, voiceChannel, input) {
 	}
 }
 
+//Search YouTube for the song and return the URL of the song.
 async function getYTUrl(search) {
 	var url;
-	// search for a song
+	//Search for a song.
 	await youtube.searchVideos(search, 1).then((results) => {
 		url = "https://www.youtube.com/watch?v=" + results[0].id;
 	});
 	return url;
 }
 
-
+//Restarts the bot.
 function restart(client) {
 	console.log("Restarting...");
 	client.destroy().then(() => {

@@ -7,8 +7,8 @@
   "scripts": {
     "test": "node tests/test.js"
   },
-  "author": "Steven Gao and Echo Bot Team",
-  "license": "SEE LICENSE IN LICENSE",
+  "author": "Steven Gao and the Echo Bot Team",
+  "license": "MIT",
   "dependencies": {
     "discord.js": "^11.4.2",
     "ffmpeg-binaries": "^4.0.0",

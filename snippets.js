@@ -1,3 +1,5 @@
+//Snippets that might be needed in the future.
+
 console.log("sid: " + songid);
 
 if (songid == null) {
