@@ -8,5 +8,20 @@ A customizable Discord bot created with JavaScript.
 3. Read and follow the instructions at https://www.techjunkie.com/add-bots-discord-server/ to figure out how to add the bot to your server.
 4. Run 'node app.js'.
 
+### Contribute:
+
+1. Fork this repository.
+2. Create your feature branch: `git checkout -b my-new-feature`.
+3. Commit your changes: `git commit -am 'Add some feature'`.
+4. Push to the branch: `git push origin my-new-feature`.
+5. Submit a pull request.
+
+### Author:
+
+**Echo-Bot** © Released under the [MIT] License.<br>
+Authored and maintained by the Echo Bot Team.
+
+> GitHub [@Steven](https://github.com/stevenruidigao)
+
 ### Join:
 1. Join our discord server at https://discord.gg/SFtrvqK!
