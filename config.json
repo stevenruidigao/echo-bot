@@ -1,5 +1,5 @@
 {
-    "token": "", 
-    "googleapikey": "", 
+    "token": "<Your Discord API Toke Here>", 
+    "googleapikey": "<Your Youtube API Key Here>", 
     "prefix": "!"
 }
