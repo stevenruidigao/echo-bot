@@ -18,7 +18,7 @@ A customizable Discord bot created with JavaScript.
 
 ### Author:
 
-**Echo-Bot** © Released under the [MIT] License.<br>
+**Echo-Bot** © 2018 The Echo Bot Team. Released under the MIT License.<br>
 
 Authored and maintained by the Echo Bot Team.
 
