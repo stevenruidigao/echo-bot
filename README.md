@@ -12,13 +12,14 @@ A customizable Discord bot created with JavaScript.
 
 1. Fork this repository.
 2. Create your feature branch: `git checkout -b my-new-feature`.
-3. Commit your changes: `git commit -am 'Add some feature'`.
+3. Commit your changes: `git commit -m 'Add some feature'`.
 4. Push to the branch: `git push origin my-new-feature`.
 5. Submit a pull request.
 
 ### Author:
 
 **Echo-Bot** © Released under the [MIT] License.<br>
+
 Authored and maintained by the Echo Bot Team.
 
 > GitHub [@Steven](https://github.com/stevenruidigao)
