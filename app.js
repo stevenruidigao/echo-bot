@@ -78,7 +78,7 @@ client.on("message", async message => {
 		case "restart":
 			restart(client);
 		case "help":
-			channel.send("Ask @stevenruidigao or @humb2700!");
+			channel.send("Ask for help in #help!");
 			break;
 		//Tell the user the latency.
 		case "ping":
