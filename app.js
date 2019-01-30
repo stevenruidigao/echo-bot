@@ -16,13 +16,12 @@ const readline = require('readline').createInterface({
   input: process.stdin,
   output: process.stdout
 });
+
 //Discord bot.
 const client = new Discord.Client();
+
 //Music queue object.
 const musicQueue = new Map();
-
-//Array of the possible commands.
-const commands = ["!help", "!ping", "!idk", "!play", "!multiply"];
 
 //Runs when the bot is ready.
 client.on("ready", () => {
@@ -76,6 +75,8 @@ client.on("message", async message => {
 	var channel = message.channel;
 	const args = message.content.trim().split(" ");
 	const cmd = args[0].toLowerCase();
+	//Array of the possible commands.
+	const commands = ["help", "ping", "idk", "play"];
 	var serverQueue = musicQueue.get(message.guild.id);
 	args.shift();
 	var msg = message.content.toLowerCase();
@@ -87,6 +88,9 @@ client.on("message", async message => {
 	}
 	//This switch statement responds to various commands.
 	switch (cmd.split(config.prefix)[1]) {
+		//List of commands
+		case "commands":
+			channel.send("The possible commands are: " + commands.join(", "));
 		//Restart the client.
 		case "restart":
 			restart(client);
@@ -191,49 +195,6 @@ client.on("message", async message => {
 			break;
 	}
 });
-
-//Command that multiplies multiple values together.
-function multiplyCommand(arguments, receivedMessage) {
-    if (arguments.length < 2) {
-      receivedMessage.channel.send("Not enough values to multiply together. Try '!multiply 2 4 10' or '!multiply 5.2 7'.");
-      return;
-    }
-    let product = 1;
-    arguments.forEach((value) => {
-      product = product * parseFloat(value);
-    });
-    receivedMessage.channel.send("The product of [" + arguments + "] multiplied together is: " + product.toString() + ".");
-}
-
-//Command that lists all the commands Echo Bot can do.
-function listCommands(arguments, receivedMessage) {
-	receivedMessage.channel.send("Echo Bot can do many things. Here are the commands Echo Bot will respond to: " + commands + ".");
-}
-
-//Runs when the bot receives a message.
-client.on('message', (receivedMessage) => {
-    if (receivedMessage.author == client.user) { //Prevent bot from responding to its own messages.
-        return;
-    }
-    if (receivedMessage.content.startsWith("!")) {
-        processCommand(receivedMessage);
-    }
-});
-
-//Function that processes the command the user gives to Echo Bot.
-function processCommand(receivedMessage) {
-    let fullCommand = receivedMessage.content.substr(1); //Remove the leading exclamation mark.
-    let splitCommand = fullCommand.split(" "); //Split the message up in to pieces for each space.
-    let primaryCommand = splitCommand[0]; //The first word directly after the exclamation is the command.
-    let arguments = splitCommand.slice(1); //All other words are arguments/parameters/options for the command.
-    if (primaryCommand == "multiply") {
-	  multiplyCommand(arguments, receivedMessage);
-	} else if (primaryCommand == "commands") {
-	  listCommands(arguments, receivedMessage);
-	} else {
-      receivedMessage.channel.send("I do not understand the command. Try '!commands' to see a list of the available commands.");
-    }
-}
 
 //Gets a random value out of a specified array.
 function choice(choices) {
